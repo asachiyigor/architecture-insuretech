@@ -1,0 +1,113 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.2.9">
+  <diagram name="C4 Container - Event-Driven" id="c4-event-driven">
+    <mxGraphModel dx="1678" dy="874" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1A237E;strokeColor=#0D47A1;fontSize=18;fontStyle=1;fontColor=#FFFFFF" value="InsureTech - C4 Container Diagram TO-BE&#xa;Event-Driven Architecture с Apache Kafka" vertex="1">
+          <mxGeometry height="80" width="800" x="270" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="webapp" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#1976D2;fontSize=11;align=left;verticalAlign=top" value="Веб-приложение&#xa;[Container: React SPA]&#xa;&#xa;Пользовательский интерфейс&#xa;для работы с полисами" vertex="1">
+          <mxGeometry height="80" width="170" x="350" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="coreapp" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;fontSize=12;fontStyle=1;align=left;verticalAlign=top" value="core-app&#xa;[Container: Java/Spring Boot]" vertex="1">
+          <mxGeometry height="280" width="400" x="110" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="coreapp-comp" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#388E3C;fontSize=10;align=left" value="Components:&#xa;• REST API (CRUD полисов)&#xa;• Event Consumer (Kafka)&#xa;• GraphQL API (client-info)&#xa;&#xa;Database:&#xa;• policies (основные данные)&#xa;• local_products_replica 📋&#xa;&#xa;Technology: PostgreSQL" vertex="1">
+          <mxGeometry height="200" width="360" x="130" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="clientinfo" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F57F17;fontSize=11;align=left;verticalAlign=top" value="client-info-service&#xa;[Container: GraphQL API]&#xa;&#xa;Сервис информации о клиентах&#xa;GraphQL endpoint для агрегации" vertex="1">
+          <mxGeometry height="80" width="230" x="110" y="760" as="geometry" />
+        </mxCell>
+        <mxCell id="kafka" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#FF6F00;fontSize=14;fontStyle=1;align=left;verticalAlign=top;strokeWidth=3" value="Apache Kafka&#xa;[Container: Message Broker]" vertex="1">
+          <mxGeometry height="400" width="480" x="630" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="topic1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#E65100;fontSize=10;align=left;verticalAlign=top" value="Topic: insurance-products&#xa;• Partitions: 6&#xa;• Replication: 3&#xa;• Retention: 30 days&#xa;• Events: ProductUpdated, ProductCreated" vertex="1">
+          <mxGeometry height="100" width="440" x="650" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="topic2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#E65100;fontSize=10;align=left;verticalAlign=top" value="Topic: insurance-policies&#xa;• Partitions: 6&#xa;• Replication: 3&#xa;• Retention: 365 days&#xa;• Events: PolicyCreated, PolicyCancelled" vertex="1">
+          <mxGeometry height="100" width="440" x="650" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="kafka-info" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#FF6F00;fontSize=9;align=center;dashed=1" value="Event Streaming Platform&#xa;Гарантированная доставка, порядок событий,&#xa;партиционирование по страховой компании" vertex="1">
+          <mxGeometry height="80" width="440" x="650" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="aggregator" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E1BEE7;strokeColor=#7B1FA2;fontSize=12;fontStyle=1;align=left;verticalAlign=top" value="ins-product-aggregator&#xa;[Container: Python/FastAPI]" vertex="1">
+          <mxGeometry height="300" width="400" x="1230" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="aggregator-comp" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F3E5F5;strokeColor=#6A1B9A;fontSize=10;align=left" value="Components:&#xa;• Product Aggregator (от страховых)&#xa;• Outbox Publisher (background process)&#xa;&#xa;Database Tables:&#xa;• products (основные данные)&#xa;• product_outbox (Transactional Outbox) 📤&#xa;&#xa;Technology: PostgreSQL&#xa;&#xa;Outbox Pattern: гарантированная публикация&#xa;событий после commit транзакции" vertex="1">
+          <mxGeometry height="220" width="360" x="1250" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="settlement" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFCCBC;strokeColor=#D84315;fontSize=12;fontStyle=1;align=left;verticalAlign=top" value="ins-comp-settlement&#xa;[Container: Python/FastAPI]" vertex="1">
+          <mxGeometry height="300" width="400" x="1230" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="settlement-comp" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFE0B2;strokeColor=#D84315;fontSize=10;align=left" value="Components:&#xa;• Products Consumer (Kafka) 📥&#xa;• Policies Consumer (Kafka) 📥&#xa;• Settlement Calculator&#xa;&#xa;Database Tables:&#xa;• local_products_replica 📋&#xa;• local_policies_replica 📋&#xa;• settlements (расчеты)&#xa;&#xa;Technology: PostgreSQL" vertex="1">
+          <mxGeometry height="220" width="360" x="1250" y="580" as="geometry" />
+        </mxCell>
+        <mxCell id="companies" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#37474F;fontSize=11;align=left;verticalAlign=top;strokeWidth=2;dashed=1;dashPattern=8 8" value="Страховые компании&#xa;[External System]&#xa;&#xa;REST API продуктов и расчетов:&#xa;• Росгосстрах&#xa;• СОГАЗ&#xa;• Ингосстрах&#xa;• Альфастрахование" vertex="1">
+          <mxGeometry height="160" width="200" x="1660" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="rest1" edge="1" parent="1" source="webapp" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#1976D2" target="coreapp" value="REST API">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rest2" edge="1" parent="1" source="clientinfo" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#F57F17" target="coreapp" value="GraphQL&#xa;Query">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="90" y="820" />
+              <mxPoint x="90" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rest3" edge="1" parent="1" source="aggregator" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#6A1B9A" target="companies" value="REST API&#xa;Products">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rest4" edge="1" parent="1" source="settlement" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeWidth=2;strokeColor=#D84315" target="companies" value="REST API&#xa;Расчеты">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="event1" edge="1" parent="1" source="aggregator" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#7B1FA2;dashed=1;dashPattern=8 8;fontSize=10;fontStyle=1;fontColor=#7B1FA2" target="kafka" value="PUBLISH&#xa;ProductUpdated&#xa;ProductCreated">
+          <mxGeometry relative="1" x="-0.1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="event2" edge="1" parent="1" source="kafka" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#388E3C;dashed=1;dashPattern=8 8;fontSize=10;fontStyle=1;fontColor=#388E3C" target="coreapp" value="SUBSCRIBE&#xa;insurance-products&#xa;(Event Consumer)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="event3" edge="1" parent="1" source="coreapp" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#2E7D32;dashed=1;dashPattern=8 8;fontSize=10;fontStyle=1;fontColor=#2E7D32" target="kafka" value="PUBLISH&#xa;PolicyCreated&#xa;PolicyCancelled">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="event4" edge="1" parent="1" source="kafka" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.33;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#E65100;dashed=1;dashPattern=8 8;fontSize=10;fontStyle=1;fontColor=#E65100" target="settlement" value="SUBSCRIBE&#xa;insurance-products">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="event5" edge="1" parent="1" source="kafka" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.66;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeWidth=3;strokeColor=#E65100;dashed=1;dashPattern=8 8;fontSize=10;fontStyle=1;fontColor=#E65100" target="settlement" value="SUBSCRIBE&#xa;insurance-policies">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="comment1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFDE7;strokeColor=#F9A825;fontSize=10;align=left;verticalAlign=top;dashed=1" value="💡 Transactional Outbox Pattern:&#xa;1. Сохранение в DB + запись в outbox (1 транзакция)&#xa;2. Background worker публикует в Kafka&#xa;3. Гарантия: no data loss, exactly-once" vertex="1">
+          <mxGeometry height="60" width="270" x="1230" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="comment2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFDE7;strokeColor=#F9A825;fontSize=10;align=left;verticalAlign=top;dashed=1" value="💡 Local Replicas (CQRS Read Model):&#xa;• core-app: local_products_replica&#xa;• settlement: local_products_replica + local_policies_replica&#xa;Преимущества: 0 latency, нет зависимостей" vertex="1">
+          <mxGeometry height="60" width="230" x="630" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="comment3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFDE7;strokeColor=#F9A825;fontSize=10;align=left;verticalAlign=top;dashed=1" value="💡 Event-Driven Benefits:&#xa;• Асинхронность: no cascading failures&#xa;• Масштабируемость: consumer groups&#xa;• Resilience: retry, dead-letter queues&#xa;• Audit: event log сохранен в Kafka" vertex="1">
+          <mxGeometry height="70" width="230" x="110" y="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="comment4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFDE7;strokeColor=#F9A825;fontSize=10;align=left;verticalAlign=top;dashed=1" value="💡 Kafka Guarantees:&#xa;• Partitioning: по insurance_company_id&#xa;• Ordering: внутри партиции гарантирован&#xa;• Retention: products 30d, policies 365d&#xa;• Replication: 3 replicas для HA" vertex="1">
+          <mxGeometry height="70" width="230" x="630" y="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#37474F;fontSize=12;fontStyle=1;align=center" value="ЛЕГЕНДА" vertex="1">
+          <mxGeometry height="30" width="400" x="1230" y="1000" as="geometry" />
+        </mxCell>
+        <mxCell id="legend1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#1976D2;fontSize=10;align=left;strokeWidth=2" value="━━━━  REST API (синхронный)" vertex="1">
+          <mxGeometry height="25" width="400" x="1230" y="1040" as="geometry" />
+        </mxCell>
+        <mxCell id="legend2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#7B1FA2;fontSize=10;align=left;dashed=1;dashPattern=8 8;strokeWidth=3" value="- - - -  Event-Driven (асинхронный)" vertex="1">
+          <mxGeometry height="25" width="400" x="1230" y="1070" as="geometry" />
+        </mxCell>
+        <mxCell id="legend3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontSize=10;align=center" value="📤 Outbox Publisher  📥 Event Consumer  📋 Local Replica" vertex="1">
+          <mxGeometry height="25" width="400" x="1230" y="1100" as="geometry" />
+        </mxCell>
+        <mxCell id="summary" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#2E7D32;fontSize=11;fontStyle=1;align=left;verticalAlign=top;strokeWidth=2" value="КЛЮЧЕВЫЕ ИЗМЕНЕНИЯ TO-BE:&#xa;❌ УДАЛЕНО: Синхронные REST вызовы между микросервисами&#xa;✅ ДОБАВЛЕНО: Apache Kafka + Event-Driven архитектура&#xa;✅ ДОБАВЛЕНО: Transactional Outbox для надежности&#xa;✅ ДОБАВЛЕНО: Local Replicas (CQRS) для производительности" vertex="1">
+          <mxGeometry height="80" width="390" x="110" y="900" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

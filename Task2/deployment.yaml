@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scaletestapp
+  labels:
+    app: scaletestapp
+spec:
+  replicas: 1  # Начальное количество реплик
+  selector:
+    matchLabels:
+      app: scaletestapp
+  template:
+    metadata:
+      labels:
+        app: scaletestapp
+    spec:
+      containers:
+      - name: scaletestapp
+        image: ghcr.io/yandex-practicum/scaletestapp:latest
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            memory: "20Mi"    # Запрашиваемый минимум памяти
+            cpu: "100m"       # 0.1 CPU
+          limits:
+            memory: "30Mi"    # Максимальный лимит памяти (как указано в задании)
+            cpu: "200m"       # 0.2 CPU
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2

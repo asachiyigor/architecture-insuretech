@@ -1,0 +1,158 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.2.9">
+  <diagram name="InsureTech TO-BE Architecture" id="architecture-to-be">
+    <mxGraphModel dx="2377" dy="1238" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="users" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E3F2FD;strokeColor=#1976D2;fontSize=14;fontStyle=1" value="Пользователи из разных регионов РФ" vertex="1">
+          <mxGeometry height="60" width="320" x="910" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="cdn" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFF3E0;strokeColor=#F57C00;fontSize=12;fontStyle=1" value="Yandex Cloud CDN&#xa;(Кэширование статики)" vertex="1">
+          <mxGeometry height="60" width="320" x="910" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow1" edge="1" parent="1" source="users" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" target="cdn" value="HTTPS">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="alb" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#388E3C;fontSize=13;fontStyle=1" value="Yandex Application Load Balancer&#xa;Geo-routing + Health Checks" vertex="1">
+          <mxGeometry height="70" width="400" x="870" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow2" edge="1" parent="1" source="cdn" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" target="alb">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="zoneA" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFEBEE;strokeColor=#C62828;fontSize=14;fontStyle=1;align=left;verticalAlign=top;dashed=1;dashPattern=8 8;strokeWidth=2" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;Зона доступности A (ru-central1-a)" vertex="1">
+          <mxGeometry height="580" width="420" x="230" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="nlbA" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#BBDEFB;strokeColor=#1976D2;fontSize=11" value="Network Load Balancer" vertex="1">
+          <mxGeometry height="40" width="300" x="290" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="k8sA" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E1F5FE;strokeColor=#0277BD;fontSize=10;align=left;verticalAlign=top" value="Kubernetes Cluster&#xa;- NGINX Ingress Controller&#xa;- core-app (HPA: 3-10 pods)&#xa;- client-info-service&#xa;- ins-product-aggregator&#xa;- ins-comp-settlement&#xa;- Prometheus + Grafana" vertex="1">
+          <mxGeometry height="150" width="380" x="250" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="pgMaster" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;fontSize=11;fontStyle=1" value="PostgreSQL&#xa;MASTER&#xa;(Read/Write)" vertex="1">
+          <mxGeometry height="80" width="180" x="250" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="redisA" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFCCBC;strokeColor=#D84315;fontSize=11" value="Redis&#xa;Node 1" vertex="1">
+          <mxGeometry height="80" width="180" x="450" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="replAB" edge="1" parent="1" source="pgMaster" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#2E7D32;dashed=1;dashPattern=4 4" value="Streaming Replication (Sync)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="730" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zoneB" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF9C4;strokeColor=#F57F17;fontSize=14;fontStyle=1;align=left;verticalAlign=top;dashed=1;dashPattern=8 8;strokeWidth=2" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;Зона доступности B (ru-central1-b)" vertex="1">
+          <mxGeometry height="580" width="420" x="730" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="nlbB" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#BBDEFB;strokeColor=#1976D2;fontSize=11" value="Network Load Balancer" vertex="1">
+          <mxGeometry height="40" width="300" x="790" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="k8sB" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E1F5FE;strokeColor=#0277BD;fontSize=10;align=left;verticalAlign=top" value="Kubernetes Cluster&#xa;- NGINX Ingress Controller&#xa;- core-app (HPA: 3-10 pods)&#xa;- client-info-service&#xa;- ins-product-aggregator&#xa;- ins-comp-settlement&#xa;- Prometheus + Grafana" vertex="1">
+          <mxGeometry height="150" width="380" x="750" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="pgSync" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;fontSize=11;fontStyle=1" value="PostgreSQL&#xa;SYNC REPLICA&#xa;(Read)" vertex="1">
+          <mxGeometry height="80" width="180" x="750" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="redisB" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFCCBC;strokeColor=#D84315;fontSize=11" value="Redis&#xa;Node 2" vertex="1">
+          <mxGeometry height="80" width="180" x="950" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="replBD" edge="1" parent="1" source="pgSync" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#F57F17;dashed=1;dashPattern=4 4" value="Streaming Replication (Async)">
+          <mxGeometry relative="1" x="-0.1333" y="-50" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1230" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="zoneD" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1BEE7;strokeColor=#7B1FA2;fontSize=14;fontStyle=1;align=left;verticalAlign=top;dashed=1;dashPattern=8 8;strokeWidth=2" value="&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;Зона доступности D (ru-central1-d)" vertex="1">
+          <mxGeometry height="580" width="420" x="1230" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="nlbD" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#BBDEFB;strokeColor=#1976D2;fontSize=11" value="Network Load Balancer" vertex="1">
+          <mxGeometry height="40" width="300" x="1290" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="k8sD" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E1F5FE;strokeColor=#0277BD;fontSize=10;align=left;verticalAlign=top" value="Kubernetes Cluster&#xa;- NGINX Ingress Controller&#xa;- core-app (HPA: 3-10 pods)&#xa;- client-info-service&#xa;- ins-product-aggregator&#xa;- ins-comp-settlement&#xa;- Prometheus + Grafana" vertex="1">
+          <mxGeometry height="150" width="380" x="1250" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="pgAsync" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#C8E6C9;strokeColor=#2E7D32;fontSize=11;fontStyle=1" value="PostgreSQL&#xa;ASYNC REPLICA&#xa;(Read)" vertex="1">
+          <mxGeometry height="80" width="180" x="1250" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="redisD" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFCCBC;strokeColor=#D84315;fontSize=11" value="Redis&#xa;Node 3" vertex="1">
+          <mxGeometry height="80" width="180" x="1450" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="storage" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F3E5F5;strokeColor=#6A1B9A;fontSize=12;fontStyle=1" value="Yandex Object Storage&#xa;(S3-compatible)&#xa;WAL Archiving + Backups" vertex="1">
+          <mxGeometry height="70" width="400" x="770" y="980" as="geometry" />
+        </mxCell>
+        <mxCell id="arrowALB-A" edge="1" parent="1" source="alb" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" target="nlbA" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrowALB-B" edge="1" parent="1" source="alb" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" target="nlbB" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrowALB-D" edge="1" parent="1" source="alb" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=2" target="nlbD" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hcA" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#4CAF50;dashed=1;dashPattern=2 2;fontSize=9" value="Health Check">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="970" y="310" as="sourcePoint" />
+            <mxPoint x="440" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hcB" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#4CAF50;dashed=1;dashPattern=2 2;fontSize=9" value="Health Check">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1070" y="310" as="sourcePoint" />
+            <mxPoint x="940" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hcD" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#4CAF50;dashed=1;dashPattern=2 2;fontSize=9" value="Health Check">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1170" y="310" as="sourcePoint" />
+            <mxPoint x="1440" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrowPGA-S" edge="1" parent="1" source="pgMaster" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#6A1B9A;dashed=1;fontSize=9" target="storage" value="WAL Archive">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrowPGB-S" edge="1" parent="1" source="pgSync" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#6A1B9A;dashed=1;fontSize=9" target="storage" value="WAL Archive">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrowPGD-S" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#6A1B9A;dashed=1;fontSize=9" value="WAL Archive">
+          <mxGeometry relative="1" x="0.1071" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1250" y="700" />
+              <mxPoint x="970" y="700" />
+            </Array>
+            <mxPoint x="1250" y="730" as="sourcePoint" />
+            <mxPoint x="970.0344827586207" y="1010" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="comment1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFDE7;strokeColor=#F9A825;fontSize=10;align=left;verticalAlign=top;dashed=1" value="💡 Active-Active конфигурация:&#xa;все 3 зоны активны одновременно" vertex="1">
+          <mxGeometry height="35" width="200" x="340" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="comment2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFDE7;strokeColor=#F9A825;fontSize=10;align=left;verticalAlign=top;dashed=1" value="💡 PostgreSQL Replication:&#xa;Master (A) → Sync (B) → Async (D)&#xa;RPO: ~1-5 мин, RTO: ~2-5 мин" vertex="1">
+          <mxGeometry height="50" width="200" x="340" y="200" as="geometry" />
+        </mxCell>
+        <mxCell id="comment3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFDE7;strokeColor=#F9A825;fontSize=10;align=left;verticalAlign=top;dashed=1" value="💡 HPA автомасштабирование:&#xa;core-app: 3-10 pods по памяти&#xa;или по RPS (10 req/s на pod)" vertex="1">
+          <mxGeometry height="50" width="200" x="580" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="comment4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFDE7;strokeColor=#F9A825;fontSize=10;align=left;verticalAlign=top;dashed=1" value="💡 Redis Sentinel кластер:&#xa;3 ноды для высокой доступности&#xa;автоматический failover" vertex="1">
+          <mxGeometry height="50" width="200" x="580" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ECEFF1;strokeColor=#37474F;fontSize=12;fontStyle=1;align=center" value="ЛЕГЕНДА" vertex="1">
+          <mxGeometry height="30" width="280" x="1310" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="legend1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#000000;fontSize=10;align=left" value="━━━━  Трафик пользователей" vertex="1">
+          <mxGeometry height="30" width="280" x="1310" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="legend2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#4CAF50;fontSize=10;align=left;dashed=1;dashPattern=4 4" value="- - - -  Health Checks (зеленый)" vertex="1">
+          <mxGeometry height="30" width="280" x="1310" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="legend3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2E7D32;fontSize=10;align=left;dashed=1;dashPattern=4 4" value="- - - -  DB Replication (зеленый/желтый)" vertex="1">
+          <mxGeometry height="30" width="280" x="1310" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="legend4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#6A1B9A;fontSize=10;align=left;dashed=1;dashPattern=4 4" value="- - - -  WAL Archive (фиолетовый)" vertex="1">
+          <mxGeometry height="30" width="280" x="1310" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="title" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#1A237E;strokeColor=#0D47A1;fontSize=16;fontStyle=1;fontColor=#FFFFFF" value="InsureTech - Технологическая архитектура TO-BE&#xa;3 зоны доступности Yandex Cloud (Active-Active)" vertex="1">
+          <mxGeometry height="80" width="620" x="230" y="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

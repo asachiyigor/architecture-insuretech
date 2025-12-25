@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: scaletestapp-service
+  labels:
+    app: scaletestapp
+spec:
+  type: NodePort  # Для доступа из Minikube
+  selector:
+    app: scaletestapp
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080        # Порт сервиса
+    targetPort: 8080  # Порт контейнера
+    nodePort: 30080   # Внешний порт для доступа (опционально)

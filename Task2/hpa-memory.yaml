@@ -1,0 +1,35 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: scaletestapp-hpa-memory
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: scaletestapp
+  minReplicas: 1    # Минимальное количество реплик
+  maxReplicas: 10   # Максимальное количество реплик
+  metrics:
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80  # Целевая утилизация памяти 80%
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 60  # Подождать 60 секунд перед уменьшением
+      policies:
+      - type: Percent
+        value: 50              # Уменьшать не более чем на 50% за раз
+        periodSeconds: 15
+    scaleUp:
+      stabilizationWindowSeconds: 0   # Масштабировать вверх немедленно
+      policies:
+      - type: Percent
+        value: 100             # Увеличивать до 100% (удвоение) за раз
+        periodSeconds: 15
+      - type: Pods
+        value: 2               # Или добавлять по 2 пода за раз
+        periodSeconds: 15
+      selectPolicy: Max        # Выбрать максимальное значение из политик
