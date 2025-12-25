@@ -1,0 +1,486 @@
+# GraphQL Schema для сервиса client-info
+# Замена REST API на GraphQL для гибкого выбора запрашиваемых данных
+
+"""
+Клиент - основная сущность, содержащая информацию о пользователе
+"""
+type Client {
+  """Уникальный идентификатор клиента"""
+  id: ID!
+
+  """Полное имя клиента"""
+  name: String!
+
+  """Возраст клиента"""
+  age: Int!
+
+  """
+  Документы клиента
+  Опциональное поле - загружается только если запрошено
+  """
+  documents: [Document!]
+
+  """
+  Родственники клиента
+  Опциональное поле - загружается только если запрошено
+  """
+  relatives: [Relative!]
+
+  """
+  Контактная информация клиента
+  Опциональное поле - загружается только если запрошено
+  """
+  contacts: ContactInfo
+}
+
+"""
+Документ клиента (паспорт, водительское удостоверение и т.д.)
+"""
+type Document {
+  """Уникальный идентификатор документа"""
+  id: ID!
+
+  """Тип документа (например: паспорт, водительское удостоверение, СНИЛС)"""
+  type: String!
+
+  """Номер документа"""
+  number: String!
+
+  """Дата выдачи документа"""
+  issueDate: String!
+
+  """Дата истечения срока действия документа"""
+  expiryDate: String
+
+  """Кем выдан документ"""
+  issuedBy: String
+
+  """Код подразделения (для паспорта РФ)"""
+  departmentCode: String
+}
+
+"""
+Родственник клиента
+"""
+type Relative {
+  """Уникальный идентификатор родственника"""
+  id: ID!
+
+  """Тип родства (супруг/супруга, ребенок, родитель, брат/сестра)"""
+  relationType: RelationType!
+
+  """Полное имя родственника"""
+  name: String!
+
+  """Возраст родственника"""
+  age: Int
+
+  """Дата рождения родственника"""
+  birthDate: String
+
+  """
+  Контактная информация родственника
+  Опциональное поле
+  """
+  contacts: ContactInfo
+}
+
+"""
+Типы родства
+"""
+enum RelationType {
+  """Супруг или супруга"""
+  SPOUSE
+
+  """Ребенок"""
+  CHILD
+
+  """Родитель"""
+  PARENT
+
+  """Брат или сестра"""
+  SIBLING
+
+  """Другое"""
+  OTHER
+}
+
+"""
+Контактная информация
+"""
+type ContactInfo {
+  """Номер телефона"""
+  phone: String
+
+  """Адрес электронной почты"""
+  email: String
+
+  """Адрес проживания"""
+  address: Address
+}
+
+"""
+Адрес проживания
+"""
+type Address {
+  """Страна"""
+  country: String
+
+  """Регион/область"""
+  region: String
+
+  """Город"""
+  city: String
+
+  """Улица"""
+  street: String
+
+  """Номер дома"""
+  house: String
+
+  """Номер квартиры"""
+  apartment: String
+
+  """Почтовый индекс"""
+  postalCode: String
+
+  """Полный адрес в виде строки"""
+  fullAddress: String
+}
+
+"""
+Корневой тип Query - все запросы для получения данных
+"""
+type Query {
+  """
+  Получить информацию о клиенте по ID
+  Позволяет гибко выбирать, какие поля нужно загрузить
+  """
+  client(
+    """ID клиента"""
+    id: ID!
+  ): Client
+
+  """
+  Получить список клиентов с фильтрацией и пагинацией
+  """
+  clients(
+    """Фильтр по имени (поиск по подстроке)"""
+    nameFilter: String
+
+    """Минимальный возраст"""
+    minAge: Int
+
+    """Максимальный возраст"""
+    maxAge: Int
+
+    """Количество записей для пропуска (offset)"""
+    skip: Int = 0
+
+    """Максимальное количество записей (limit)"""
+    limit: Int = 10
+  ): ClientConnection!
+
+  """
+  Получить документ клиента по ID документа
+  """
+  document(
+    """ID документа"""
+    id: ID!
+  ): Document
+
+  """
+  Получить все документы клиента
+  """
+  clientDocuments(
+    """ID клиента"""
+    clientId: ID!
+
+    """Фильтр по типу документа"""
+    typeFilter: String
+  ): [Document!]!
+
+  """
+  Получить родственника по ID
+  """
+  relative(
+    """ID родственника"""
+    id: ID!
+  ): Relative
+
+  """
+  Получить всех родственников клиента
+  """
+  clientRelatives(
+    """ID клиента"""
+    clientId: ID!
+
+    """Фильтр по типу родства"""
+    relationType: RelationType
+  ): [Relative!]!
+
+  """
+  Поиск клиентов по различным критериям
+  """
+  searchClients(
+    """Поисковый запрос (имя, email, телефон)"""
+    query: String!
+
+    """Максимальное количество результатов"""
+    limit: Int = 10
+  ): [Client!]!
+}
+
+"""
+Результат запроса списка клиентов с пагинацией
+"""
+type ClientConnection {
+  """Список клиентов"""
+  clients: [Client!]!
+
+  """Общее количество клиентов (для пагинации)"""
+  totalCount: Int!
+
+  """Информация о пагинации"""
+  pageInfo: PageInfo!
+}
+
+"""
+Информация о пагинации
+"""
+type PageInfo {
+  """Есть ли следующая страница"""
+  hasNextPage: Boolean!
+
+  """Есть ли предыдущая страница"""
+  hasPreviousPage: Boolean!
+}
+
+"""
+Корневой тип Mutation - все операции для изменения данных
+"""
+type Mutation {
+  """
+  Создать нового клиента
+  """
+  createClient(input: CreateClientInput!): Client!
+
+  """
+  Обновить информацию о клиенте
+  """
+  updateClient(input: UpdateClientInput!): Client!
+
+  """
+  Удалить клиента
+  """
+  deleteClient(id: ID!): Boolean!
+
+  """
+  Добавить документ клиенту
+  """
+  addDocument(input: AddDocumentInput!): Document!
+
+  """
+  Обновить документ
+  """
+  updateDocument(input: UpdateDocumentInput!): Document!
+
+  """
+  Удалить документ
+  """
+  deleteDocument(id: ID!): Boolean!
+
+  """
+  Добавить родственника клиенту
+  """
+  addRelative(input: AddRelativeInput!): Relative!
+
+  """
+  Обновить информацию о родственнике
+  """
+  updateRelative(input: UpdateRelativeInput!): Relative!
+
+  """
+  Удалить родственника
+  """
+  deleteRelative(id: ID!): Boolean!
+
+  """
+  Обновить контактную информацию клиента
+  """
+  updateClientContacts(input: UpdateContactsInput!): Client!
+}
+
+"""
+Input для создания нового клиента
+"""
+input CreateClientInput {
+  """Полное имя клиента"""
+  name: String!
+
+  """Возраст клиента"""
+  age: Int!
+
+  """Контактная информация"""
+  contacts: ContactInfoInput
+}
+
+"""
+Input для обновления клиента
+"""
+input UpdateClientInput {
+  """ID клиента"""
+  id: ID!
+
+  """Полное имя клиента (опционально)"""
+  name: String
+
+  """Возраст клиента (опционально)"""
+  age: Int
+}
+
+"""
+Input для добавления документа
+"""
+input AddDocumentInput {
+  """ID клиента"""
+  clientId: ID!
+
+  """Тип документа"""
+  type: String!
+
+  """Номер документа"""
+  number: String!
+
+  """Дата выдачи"""
+  issueDate: String!
+
+  """Дата истечения срока действия"""
+  expiryDate: String
+
+  """Кем выдан"""
+  issuedBy: String
+
+  """Код подразделения"""
+  departmentCode: String
+}
+
+"""
+Input для обновления документа
+"""
+input UpdateDocumentInput {
+  """ID документа"""
+  id: ID!
+
+  """Тип документа (опционально)"""
+  type: String
+
+  """Номер документа (опционально)"""
+  number: String
+
+  """Дата выдачи (опционально)"""
+  issueDate: String
+
+  """Дата истечения срока действия (опционально)"""
+  expiryDate: String
+
+  """Кем выдан (опционально)"""
+  issuedBy: String
+
+  """Код подразделения (опционально)"""
+  departmentCode: String
+}
+
+"""
+Input для добавления родственника
+"""
+input AddRelativeInput {
+  """ID клиента"""
+  clientId: ID!
+
+  """Тип родства"""
+  relationType: RelationType!
+
+  """Полное имя родственника"""
+  name: String!
+
+  """Возраст родственника"""
+  age: Int
+
+  """Дата рождения"""
+  birthDate: String
+
+  """Контактная информация"""
+  contacts: ContactInfoInput
+}
+
+"""
+Input для обновления родственника
+"""
+input UpdateRelativeInput {
+  """ID родственника"""
+  id: ID!
+
+  """Тип родства (опционально)"""
+  relationType: RelationType
+
+  """Полное имя родственника (опционально)"""
+  name: String
+
+  """Возраст родственника (опционально)"""
+  age: Int
+
+  """Дата рождения (опционально)"""
+  birthDate: String
+}
+
+"""
+Input для контактной информации
+"""
+input ContactInfoInput {
+  """Номер телефона"""
+  phone: String
+
+  """Адрес электронной почты"""
+  email: String
+
+  """Адрес проживания"""
+  address: AddressInput
+}
+
+"""
+Input для адреса
+"""
+input AddressInput {
+  """Страна"""
+  country: String
+
+  """Регион/область"""
+  region: String
+
+  """Город"""
+  city: String
+
+  """Улица"""
+  street: String
+
+  """Номер дома"""
+  house: String
+
+  """Номер квартиры"""
+  apartment: String
+
+  """Почтовый индекс"""
+  postalCode: String
+}
+
+"""
+Input для обновления контактов
+"""
+input UpdateContactsInput {
+  """ID клиента"""
+  clientId: ID!
+
+  """Контактная информация"""
+  contacts: ContactInfoInput!
+}

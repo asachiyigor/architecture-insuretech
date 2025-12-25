@@ -1,0 +1,84 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: scaletestapp-hpa-rps
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: scaletestapp
+  minReplicas: 1    # Минимальное количество реплик
+  maxReplicas: 10   # Максимальное количество реплик
+  metrics:
+  # Масштабирование на основе RPS (Requests Per Second)
+  - type: Pods
+    pods:
+      metric:
+        name: http_requests_per_second
+      target:
+        type: AverageValue
+        averageValue: "10"  # Целевое значение: 10 RPS на под
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 60  # Подождать 60 секунд перед уменьшением
+      policies:
+      - type: Percent
+        value: 50              # Уменьшать не более чем на 50% за раз
+        periodSeconds: 15
+    scaleUp:
+      stabilizationWindowSeconds: 0   # Масштабировать вверх немедленно
+      policies:
+      - type: Percent
+        value: 100             # Увеличивать до 100% (удвоение) за раз
+        periodSeconds: 15
+      - type: Pods
+        value: 3               # Или добавлять по 3 пода за раз
+        periodSeconds: 15
+      selectPolicy: Max        # Выбрать максимальное значение из политик
+
+---
+# Альтернативный вариант HPA с комбинированными метриками (память + RPS)
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: scaletestapp-hpa-combined
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: scaletestapp
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  # Метрика 1: Утилизация памяти
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  # Метрика 2: RPS на под
+  - type: Pods
+    pods:
+      metric:
+        name: http_requests_per_second
+      target:
+        type: AverageValue
+        averageValue: "10"
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 15
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+      - type: Pods
+        value: 3
+        periodSeconds: 15
+      selectPolicy: Max
